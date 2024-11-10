@@ -5,36 +5,37 @@
     ViewData["Title"] = "Log in";
 }
 
-<h3>@ViewData["Title"]</h3>
+<div class="d-flex justify-content-center align-items-center vh-100">
+    <div class="card p-4" style="width: 350px; border-radius: 15px; background-color: #e0e0e0;">
+        <h3 class="text-center mb-4">@ViewData["Title"]</h3>
 
-<form id="account" method="post">
-    <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-    <table>
-        <tr>
-            <td>Username</td>
-            <td>
-                <div class="form-floating">
-                    <input asp-for="Input.UserName" class="form" autocomplete="username" aria-required="true" />
-                    <span asp-validation-for="Input.UserName" class="text-danger"></span>
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td>Password</td>
-            <td>
-                <div class="form-floating">
-                    <input asp-for="Input.Password" class="form" autocomplete="current-password" aria-required="true" />
-                    <span asp-validation-for="Input.Password" class="text-danger"></span>
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <button id="login-submit" type="submit" class="btn btn-primary">Log in</button>
-            </td>
-        </tr>
-    </table>
-</form>
+        <form id="account" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger text-center" role="alert"></div>
+
+            <div class="mb-3">
+                <label asp-for="Input.UserName" class="form-label">Email</label>
+                <input asp-for="Input.UserName" class="form-control" placeholder="username@gmail.com" autocomplete="username" aria-required="true" />
+                <span asp-validation-for="Input.UserName" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Input.Password" class="form-label">Password</label>
+                <input asp-for="Input.Password" type="password" class="form-control" placeholder="Password" autocomplete="current-password" aria-required="true" />
+                <span asp-validation-for="Input.Password" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <a href="#" class="text-decoration-none">Forgot Password?</a>
+            </div>
+
+            <button id="login-submit" type="submit" class="btn btn-dark w-100">Sign in</button>
+
+            <div class="text-center mt-3">
+                <span>Don't have an account? <a href="#" class="text-decoration-none">Register</a></span>
+            </div>
+        </form>
+    </div>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

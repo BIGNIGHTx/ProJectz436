@@ -10,6 +10,7 @@ namespace FinalProject.Pages
     {
 
         public List<EmailInfo> listEmails = new List<EmailInfo>();
+        public List<UserInfo> listuser = new List<UserInfo>();
 
         private readonly ILogger<IndexModel> _logger;
 
@@ -73,6 +74,16 @@ namespace FinalProject.Pages
         public String EmailIsRead;
         public String EmailSender;
         public String EmailReceiver;
+    }
+
+    public class UserInfo
+    {
+        public String FirstName;
+        public String LastName;
+        public String MobilePhone;        
+        public String Username;
+        public String Password;
+
     }
 
 }

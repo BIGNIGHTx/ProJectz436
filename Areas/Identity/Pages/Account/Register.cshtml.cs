@@ -19,6 +19,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using FinalProject.Pages;
+using System.Security.Cryptography.Xml;
+using Microsoft.Data.SqlClient;
 
 namespace FinalProject.Areas.Identity.Pages.Account
 {
@@ -30,7 +33,9 @@ namespace FinalProject.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<FinalProjectUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
-
+        public UserInfo userInfo = new UserInfo();
+        public String errorMessage = "";
+        public String succesMessage = "";
         public RegisterModel(
             UserManager<FinalProjectUser> userManager,
             IUserStore<FinalProjectUser> userStore,
@@ -84,57 +89,57 @@ namespace FinalProject.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
 
-        public async Task<IActionResult> OnPostAsync(string returnUrl = null)
-        {
-            returnUrl ??= Url.Content("~/");
-            ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-            if (ModelState.IsValid)
-            {
-                var user = CreateUser();
+        //public async Task<IActionResult> OnPostAsync(string returnUrl = null)
+        //{
+        //    returnUrl ??= Url.Content("~/");
+        //    ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+        //    if (ModelState.IsValid)
+        //    {
+        //        var user = CreateUser();
 
-                user.FirstName = Input.FirstName;
-                user.LastName = Input.LastName;
-                user.MobilePhone = Input.MobilePhone;
+        //        user.FirstName = Input.FirstName;
+        //        user.LastName = Input.LastName;
+        //        user.MobilePhone = Input.MobilePhone;
 
-                await _userStore.SetUserNameAsync(user, Input.UserName, CancellationToken.None);
-                await _emailStore.SetEmailAsync(user, Input.UserName, CancellationToken.None);
-                var result = await _userManager.CreateAsync(user, Input.Password);
+        //        await _userStore.SetUserNameAsync(user, Input.UserName, CancellationToken.None);
+        //        await _emailStore.SetEmailAsync(user, Input.UserName, CancellationToken.None);
+        //        var result = await _userManager.CreateAsync(user, Input.Password);
 
-                if (result.Succeeded)
-                {
-                    _logger.LogInformation("User created a new account with password.");
+        //        if (result.Succeeded)
+        //        {
+        //            _logger.LogInformation("User created a new account with password.");
 
-                    var userId = await _userManager.GetUserIdAsync(user);
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                    var callbackUrl = Url.Page(
-                        "/Account/ConfirmEmail",
-                        pageHandler: null,
-                        values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
-                        protocol: Request.Scheme);
+        //            var userId = await _userManager.GetUserIdAsync(user);
+        //            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+        //            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+        //            var callbackUrl = Url.Page(
+        //                "/Account/ConfirmEmail",
+        //                pageHandler: null,
+        //                values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
+        //                protocol: Request.Scheme);
 
-                    await _emailSender.SendEmailAsync(Input.UserName, "Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+        //            await _emailSender.SendEmailAsync(Input.UserName, "Confirm your email",
+        //                $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
-                    if (_userManager.Options.SignIn.RequireConfirmedAccount)
-                    {
-                        return RedirectToPage("RegisterConfirmation", new { email = Input.UserName, returnUrl = returnUrl });
-                    }
-                    else
-                    {
-                        await _signInManager.SignInAsync(user, isPersistent: false);
-                        return LocalRedirect(returnUrl);
-                    }
-                }
-                foreach (var error in result.Errors)
-                {
-                    ModelState.AddModelError(string.Empty, error.Description);
-                }
-            }
+        //            if (_userManager.Options.SignIn.RequireConfirmedAccount)
+        //            {
+        //                return RedirectToPage("RegisterConfirmation", new { email = Input.UserName, returnUrl = returnUrl });
+        //            }
+        //            else
+        //            {
+        //                await _signInManager.SignInAsync(user, isPersistent: false);
+        //                return LocalRedirect(returnUrl);
+        //            }
+        //        }
+        //        foreach (var error in result.Errors)
+        //        {
+        //            ModelState.AddModelError(string.Empty, error.Description);
+        //        }
+        //    }
 
-            // If we got this far, something failed, redisplay form
-            return Page();
-        }
+        //    // If we got this far, something failed, redisplay form
+        //    return Page();
+        //}
 
         private FinalProjectUser CreateUser()
         {
@@ -158,5 +163,65 @@ namespace FinalProject.Areas.Identity.Pages.Account
             }
             return (IUserEmailStore<FinalProjectUser>)_userStore;
         }
+
+        public void OnPost()
+        {
+            userInfo.FirstName = Request.Form["FirstName"];
+            userInfo.LastName = Request.Form["LastName"];
+            userInfo.MobilePhone = Request.Form["MobilePhone"];
+            userInfo.Username = Request.Form["Username"];
+            userInfo.Password = Request.Form["Password"];
+
+            if (userInfo.FirstName.Length == 0 || userInfo.LastName.Length == 0 ||
+                userInfo.MobilePhone.Length == 0 || userInfo.Username.Length == 0||
+                userInfo.Password.Length == 0)
+            {
+                errorMessage = "All the fields are required";
+                return;
+            }
+
+            try
+            {
+                String connectionString = "Server=tcp:finalx.database.windows.net,1433;Initial Catalog=Finalx;Persist Security Info=False;User ID=vidit;Password=thep1234@;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+                    String sql = "INSERT INTO userInfo " +
+                                 "(FirstName, LastName, MobilePhone, Username, Password) VALUES " +
+                                 "(@FirstName,@LastName,@MobilePhone,@Username,@Password);";
+
+                    using (SqlCommand command = new SqlCommand(sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@FirstName", userInfo.FirstName);
+                        command.Parameters.AddWithValue("@LastName", userInfo.LastName);
+                        command.Parameters.AddWithValue("@MobilePhone", userInfo.MobilePhone);
+                        command.Parameters.AddWithValue("@Username", userInfo.Username);
+                        command.Parameters.AddWithValue("@Password", userInfo.Password);
+
+                        command.ExecuteNonQuery();
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                errorMessage = ex.Message;
+                return;
+            }
+
+            userInfo.FirstName = "";
+            userInfo.LastName = "";
+            userInfo.MobilePhone = "";
+            userInfo.Username = "";
+            userInfo.Password = "";
+
+            succesMessage = "New Item Added Correctly";
+
+            
+
+
+        }
+
+
     }
 }

@@ -1,4 +1,4 @@
-html {
+﻿html {
   font-size: 14px;
 }
 
@@ -25,4 +25,16 @@ th {
 
 td {
     color: Black;
+}
+
+.button-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+    .button-container .btn {
+        width: 48%; /* หรือปรับตามความเหมาะสม */
+    }
+.form-label {
+    color: black;
 }

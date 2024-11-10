@@ -4,7 +4,7 @@
     ViewData["Title"] = "Register";
 }
 
-<h3>@ViewData["Title"]</h3>
+
 
 <div class="d-flex justify-content-center align-items-center vh-100">
     <div class="card p-4" style="width: 350px; border-radius: 15px; background-color: #e0e0e0;">
@@ -59,7 +59,7 @@
             <div class="mt-2 ">
                 <div class="dropdown w-100">
                     <label asp-for="Input.UserName" class="form-label d-block">Department</label>
-                    <button class="btn btn-primary dropdown-toggle bg-dark text-white" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                    <button class="btn btn-primary dropdown-toggle bg-dark text-white w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                         Select Department
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -72,14 +72,18 @@
 
 
 
-            <div class="mb-3 fs-6">
-                <a href="#" class="text-decoration-none">Forgot Password?</a>
+          
+            <div class="button-container mt-2">
+                <button class="btn btn-dark">Back to Login</button>
+                <button class="btn btn-dark">Register</button>
             </div>
 
-            <button id="login-submit" type="submit" class="btn btn-dark w-100">Sign in</button>
+            
+
+
 
             <div class="text-center mt-3">
-                <span>Don't have an account? <a href="#" class="text-decoration-none">Register</a></span>
+                
             </div>
 
 

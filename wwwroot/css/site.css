@@ -1,4 +1,6 @@
-﻿html {
+﻿@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap');
+
+html {
   font-size: 14px;
 }
 
@@ -27,6 +29,7 @@ td {
     color: Black;
 }
 
+}
 .button-container {
     display: flex;
     justify-content: space-between;
@@ -39,7 +42,7 @@ td {
     gap: 10px;
     margin-top: 10px;
     max-height: calc(100vh - 80px);
-    padding-bottom: 20px;
+    padding-bottom: 10px;
 }
 
     .button-container .btn {
@@ -49,23 +52,33 @@ td {
     color: black;
 }
 
-.scrollable-container {
-    max-height: 400px; /* กำหนดความสูงของคอนเทนเนอร์ */
-    overflow-y:auto; /* ทำให้สามารถเลื่อนขึ้นลงได้ */
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    
+.manrope-<uniquifier > {
+    font-family: "Manrope", serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
 }
-
-
 
 body {
-    font-family: 'Manrope', sans-serif;
-    color: #e0e0e0; /* สามารถเปลี่ยนสีตัวหนังสือได้ตามต้องการ */
-    font-size: 16px; /* ขนาดฟอนต์เริ่มต้น */
-    line-height: 1.5; /* ความสูงบรรทัดเพื่อให้ข้อความอ่านง่ายขึ้น */
+    font-family: "Manrope", serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    /*font-family: 'Manrope', sans-serif;
+    color: #e0e0e0;*/ /* สามารถเปลี่ยนสีตัวหนังสือได้ตามต้องการ */
+    /*font-size: 16px;*/ /* ขนาดฟอนต์เริ่มต้น */
+    /*line-height: 1.5;*/ /* ความสูงบรรทัดเพื่อให้ข้อความอ่านง่ายขึ้น */
 }
 
+.scrollable-content {
+    overflow-y: scroll; /* Enables scrolling */
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+    padding: 10px;
 
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap');
+}
+
+.scrollable-content::-webkit-scrollbar {
+        display: none; /* Safari and Chrome */
+}
+

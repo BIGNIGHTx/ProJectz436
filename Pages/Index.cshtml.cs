@@ -83,6 +83,8 @@ namespace FinalProject.Pages
         public String MobilePhone;        
         public String Username;
         public String Password;
+        public String Email;
+        public String Department;
 
     }
 

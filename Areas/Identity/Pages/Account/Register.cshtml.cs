@@ -171,10 +171,13 @@ namespace FinalProject.Areas.Identity.Pages.Account
             userInfo.MobilePhone = Request.Form["MobilePhone"];
             userInfo.Username = Request.Form["Username"];
             userInfo.Password = Request.Form["Password"];
+            userInfo.Email = Request.Form["Email"];
+            userInfo.Department = Request.Form["Department"];
 
             if (userInfo.FirstName.Length == 0 || userInfo.LastName.Length == 0 ||
                 userInfo.MobilePhone.Length == 0 || userInfo.Username.Length == 0||
-                userInfo.Password.Length == 0)
+                userInfo.Password.Length == 0 || userInfo.Email.Length == 0 ||
+                userInfo.Department.Length == 0)
             {
                 errorMessage = "All the fields are required";
                 return;
@@ -187,8 +190,8 @@ namespace FinalProject.Areas.Identity.Pages.Account
                 {
                     connection.Open();
                     String sql = "INSERT INTO userInfo " +
-                                 "(FirstName, LastName, MobilePhone, Username, Password) VALUES " +
-                                 "(@FirstName,@LastName,@MobilePhone,@Username,@Password);";
+                                 "(FirstName, LastName, MobilePhone, Username, Password, Email, Department) VALUES " +
+                                 "(@FirstName,@LastName,@MobilePhone,@Username,@Password,@Email,@Department);";
 
                     using (SqlCommand command = new SqlCommand(sql, connection))
                     {
@@ -197,6 +200,9 @@ namespace FinalProject.Areas.Identity.Pages.Account
                         command.Parameters.AddWithValue("@MobilePhone", userInfo.MobilePhone);
                         command.Parameters.AddWithValue("@Username", userInfo.Username);
                         command.Parameters.AddWithValue("@Password", userInfo.Password);
+
+                        command.Parameters.AddWithValue("@Email", userInfo.Email);
+                        command.Parameters.AddWithValue("@Department", userInfo.Department);
 
                         command.ExecuteNonQuery();
                     }
@@ -214,6 +220,8 @@ namespace FinalProject.Areas.Identity.Pages.Account
             userInfo.MobilePhone = "";
             userInfo.Username = "";
             userInfo.Password = "";
+            userInfo.Email = "";
+            userInfo.Department = "";
 
             succesMessage = "New Item Added Correctly";
 

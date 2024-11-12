@@ -25,7 +25,7 @@
 
                 <div class="mb-2">
                 <label asp-for="Input.FirstName" class="form-label">First name</label>
-                <input asp-for="Input.FirstName" type="password" class="form-control" placeholder="Enter First name" autocomplete="current-password" aria-required="true" />
+                <input asp-for="Input.FirstName" class="form-control" placeholder="Enter First name" autocomplete="current-password" aria-required="true" />
                 <span asp-validation-for="Input.FirstName" class="text-danger"></span>
                 </div>
 
@@ -49,13 +49,13 @@
 
                 <div class="mb-2">
                 <label asp-for="Input.Password" class="form-label">Password</label>
-                <input asp-for="Input.Password" class="form-control" placeholder="Enter Password" autocomplete="username" aria-required="true" />
+                <input asp-for="Input.Password" type="password" class="form-control" placeholder="Enter Password" autocomplete="username" aria-required="true" />
                 <span asp-validation-for="Input.Password" class="text-danger"></span>
                 </div>
 
                 <div class="mb-2">
                     <label asp-for="Input.UserName" class="form-label">Confirm Password</label>
-                    <input asp-for="Input.UserName" class="form-control" placeholder="Enter Confirm Password" autocomplete="username" aria-required="true" />
+                    <input asp-for="Input.UserName" type="password "class="form-control" placeholder="Enter Confirm Password" autocomplete="username" aria-required="true" />
                     <span asp-validation-for="Input.UserName" class="text-danger"></span>
                 </div>
 

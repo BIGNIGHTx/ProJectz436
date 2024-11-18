@@ -4,91 +4,75 @@
     ViewData["Title"] = "Register";
 }
 
-
 <div class="d-flex justify-content-center align-items-center vh-100">
     <div class="card p-4" style="width: 480px; border-radius: 15px; background-color: #CECECE;">
-        <h3 class="text-center  "style="color:black">@ViewData["Title"]</h3>
+        <h3 class="text-center" style="color:black">@ViewData["Title"]</h3>
         <h6 class="text-center mb-2" style="color:black">Connect with your friends today!</h6>
 
-
-            
         <form id="account" method="post" class="scrollable-content" style="height: 400px; overflow-y: scroll;">
-                <div asp-validation-summary="ModelOnly" class="text-danger text-center" role="alert"></div>
+            <div asp-validation-summary="ModelOnly" class="text-danger text-center" role="alert"></div>
 
+            <div class="mb-2">
+                <label asp-for="Input.UserName" class="form-label">Username</label>
+                <input asp-for="Input.UserName" class="form-control" placeholder="Enter Username" />
+                <span asp-validation-for="Input.UserName" class="text-danger"></span>
+            </div>
 
-
-                <div class="mb-2">
-                    <label asp-for="Input.UserName" class="form-label">Useranme</label>
-                    <input asp-for="Input.UserName" class="form-control" placeholder="Enter Username" autocomplete="username" aria-required="true" />
-                    <span asp-validation-for="Input.UserName" class="text-danger"></span>
-                </div>
-
-                <div class="mb-2">
-                <label asp-for="Input.FirstName" class="form-label">First name</label>
-                <input asp-for="Input.FirstName" class="form-control" placeholder="Enter First name" autocomplete="current-password" aria-required="true" />
+            <div class="mb-2">
+                <label asp-for="Input.FirstName" class="form-label">First Name</label>
+                <input asp-for="Input.FirstName" class="form-control" placeholder="Enter First Name" />
                 <span asp-validation-for="Input.FirstName" class="text-danger"></span>
-                </div>
+            </div>
 
-                <div class="mb-2">
-                <label asp-for="Input.LastName" class="form-label">Last name</label>
-                <input asp-for="Input.LastName" class="form-control" placeholder="Enter Last name" autocomplete="username" aria-required="true" />
+            <div class="mb-2">
+                <label asp-for="Input.LastName" class="form-label">Last Name</label>
+                <input asp-for="Input.LastName" class="form-control" placeholder="Enter Last Name" />
                 <span asp-validation-for="Input.LastName" class="text-danger"></span>
-                </div>
+            </div>
 
-                <div class="mb-2">
+            <div class="mb-2">
                 <label asp-for="Input.Email" class="form-label">Email</label>
-                <input asp-for="Input.Email" class="form-control" placeholder="Enter Email" autocomplete="username" aria-required="true" />
+                <input asp-for="Input.Email" class="form-control" placeholder="Enter Email" />
                 <span asp-validation-for="Input.Email" class="text-danger"></span>
-                </div>
+            </div>
 
-                <div class="mb-2">
+            <div class="mb-2">
                 <label asp-for="Input.MobilePhone" class="form-label">Phone Number</label>
-                <input asp-for="Input.MobilePhone" class="form-control" placeholder="Enter Phone number" autocomplete="username" aria-required="true" />
+                <input asp-for="Input.MobilePhone" class="form-control" placeholder="Enter Phone Number" />
                 <span asp-validation-for="Input.MobilePhone" class="text-danger"></span>
-                </div>
+            </div>
 
-                <div class="mb-2">
+            <div class="mb-2">
                 <label asp-for="Input.Password" class="form-label">Password</label>
-                <input asp-for="Input.Password" type="password" class="form-control" placeholder="Enter Password" autocomplete="username" aria-required="true" />
+                <input asp-for="Input.Password" type="password" class="form-control" placeholder="Enter Password" />
                 <span asp-validation-for="Input.Password" class="text-danger"></span>
-                </div>
+            </div>
 
-                <div class="mb-2">
-                    <label asp-for="Input.UserName" class="form-label">Confirm Password</label>
-                    <input asp-for="Input.UserName" type="password "class="form-control" placeholder="Enter Confirm Password" autocomplete="username" aria-required="true" />
-                    <span asp-validation-for="Input.UserName" class="text-danger"></span>
-                </div>
+            <div class="mb-2">
+                <label asp-for="Input.ConfirmPassword" class="form-label">Confirm Password</label>
+                <input asp-for="Input.ConfirmPassword" type="password" class="form-control" placeholder="Confirm Password" />
+                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+            </div>
 
+            <div class="mb-2">
+                <label asp-for="Input.Department" class="form-label">Department</label>
+                <select asp-for="Input.Department" class="form-select">
+                    <option value="" disabled selected>Select Department</option>
+                    <option value="D1">D1</option>
+                    <option value="D2">D2</option>
+                    <option value="D3">D3</option>
+                    <option value="WAREHOUSE">WAREHOUSE</option>
+                </select>
+                <span asp-validation-for="Input.Department" class="text-danger"></span>
+            </div>
 
-                <div class="mt-2 ">
-                    <div class="dropdown w-100">
-                    <label asp-for="Input.Department" class="form-label d-block">Department</label>
-                        <button class="btn btn-primary dropdown-toggle bg-white text-black w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                            Select Department
-                        </button>
-                        <ul class="dropdown-menu w-100" aria-labelledby="dropdownMenuButton">
-                            <li><a class="dropdown-item  w-100" href="#">SALE D1</a></li>
-                            <li><a class="dropdown-item  w-100" href="#">SALE D2</a></li>
-                            <li><a class="dropdown-item  w-100" href="#">SALE D3</a></li>
-                            <li><a class="dropdown-item  w-100" href="#">WAREHOUSE</a></li>
-                        </ul>
-                    </div>
-                </div>
-
-
-
+            <div class="button-container mt-5 d-flex justify-content-between">
+                <a class="btn btn-dark" style="width:180px" asp-area="Identity" asp-page="/Account/Login">Back to Login</a>
+                <button id="registerSubmit" type="submit" class="btn btn-dark" style="width:180px">Register</button>
+            </div>
         </form>
-        <div class="button-container mt-5 d-flex justify-content-between">
-            <button class="btn btn-dark" style="width:180px">Back to Login</button>
-            <button class="btn btn-dark" style="width:180px">Register</button>
-        </div>
-
     </div>
 </div>
-
-
-
-
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

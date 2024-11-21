@@ -7,9 +7,9 @@
 <div class="d-flex justify-content-center align-items-center vh-100">
     <div class="card p-4" style="width: 480px; border-radius: 15px; background-color: #CECECE;">
         <h3 class="text-center" style="color:black">@ViewData["Title"]</h3>
-        <h6 class="text-center mb-2" style="color:black">Connect with your friends today!</h6>
 
-        <form id="account" method="post" class="scrollable-content" style="height: 400px; overflow-y: scroll;">
+        <!-- Form Section -->
+        <form id="account" method="post" class="scrollable-content mb-3" style="height: 350px; overflow-y: auto;">
             <div asp-validation-summary="ModelOnly" class="text-danger text-center" role="alert"></div>
 
             <div class="mb-2">
@@ -65,15 +65,17 @@
                 </select>
                 <span asp-validation-for="Input.Department" class="text-danger"></span>
             </div>
-
-            <div class="button-container mt-5 d-flex justify-content-between">
-                <a class="btn btn-dark" style="width:180px" asp-area="Identity" asp-page="/Account/Login">Back to Login</a>
-                <button id="registerSubmit" type="submit" class="btn btn-dark" style="width:180px">Register</button>
-            </div>
         </form>
+
+        <!-- Static Buttons Section -->
+        <div class="button-container mt-3 d-flex justify-content-between">
+            <a class="btn btn-dark" style="width:180px" asp-area="Identity" asp-page="/Account/Login">Back to Login</a>
+            <button id="registerSubmit" type="submit" class="btn btn-dark" style="width:180px">Register</button>
+        </div>
     </div>
 </div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
+

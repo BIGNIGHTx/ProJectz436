@@ -9,7 +9,7 @@
         <h3 class="text-center" style="color:black">@ViewData["Title"]</h3>
 
         <!-- Form Section -->
-        <form id="account" method="post" class="scrollable-content mb-3" style="height: 350px; overflow-y: auto;">
+        <form id="account" method="post"  class="scrollable-content mb-3" style="height: 350px; overflow-y: auto;">
             <div asp-validation-summary="ModelOnly" class="text-danger text-center" role="alert"></div>
 
             <div class="mb-2">
@@ -66,14 +66,24 @@
                 <span asp-validation-for="Input.Department" class="text-danger"></span>
             </div>
         
-
+        </form>
         <!-- Static Buttons Section -->
+        
+            
         <div class="button-container mt-3 d-flex justify-content-between">
             <a class="btn btn-dark" style="width:180px" asp-area="Identity" asp-page="/Account/Login">Back to Login</a>
-            <button id="registerSubmit" type="submit" class="btn btn-dark" style="width:180px">Register</button>
+
+            <button id="registerSubmit" class="btn btn-dark" style="width:180px" onclick="submitForm()">Register</button>
         
         </div>
-        </form>
+
+        <script>
+            function submitForm() {
+                document.getElementById("account").submit();
+            }
+        </script>
+        
+       
     </div>
 </div>
 

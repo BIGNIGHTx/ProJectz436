@@ -1,37 +1,53 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Email Inbox";
 }
 
-<center><img src="images/logo.jpg" width="400" /></center>
-
-<table class="table">
-    <thread>
-        <tr>
-            <th>From</th>
-            <th>Subject</th>
-            <th>Date/Time</th>
-            <th>Delete</th>
-        </tr>
-    </thread>
-
-    <tbody>
-        @foreach (var item in Model.listEmails)
-        {
+<h2>All Inbox</h2>
+@if (Model.listEmails.Count == 0)
+{
+    <p>No emails found for the current user.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
             <tr>
-                <td>@item.EmailSender</td>
-                <td>
-                    @if (item.EmailIsRead.Equals("0")) {
-                        <img src="images/yellow.gif" height="10pt"> 
-                    } 
-                    <a href="ReadEmail?emailid=@item.EmailID">@item.EmailSubject</a></td>
-                <td>@item.EmailDate</td>
-                <td>
-                    <a class="btn btn-primary btn-sm" href="DeleteEmail?emailid=@item.EmailID">Delete</a>
-                </td>
+                <th>Read Status</th>
+                <th>Sent Date</th>
+                <th>Sender Name</th>
+                <th>Email Subject</th>
+                <th>Message Preview</th>
+                <th>Actions</th>
             </tr>
-        }
-    </tbody>
-</table>
-<a class="btn btn-primary btn-sm" href="/ComposeMail?Sender=@User.Identity.Name">Compose New Email</a>
+        </thead>
+        <tbody>
+            @foreach (var email in Model.listEmails)
+            {
+                <tr>
+                    <td>
+                        @if (email.EmailIsRead == "0")
+                        {
+                            <span class="badge bg-primary">Unread</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">Read</span>
+                        }
+                    </td>
+                    <td>@email.EmailDate</td>
+                    <td>@email.EmailSender</td>
+                    <td>
+                        <a href="/ReadEmail?emailid=@email.EmailID">@email.EmailSubject</a>
+                    </td>
+                    <td>@email.EmailMessage.Substring(0, Math.Min(50, email.EmailMessage.Length))...</td>
+                    <td>
+                        <a class="btn btn-danger btn-sm" href="/DeleteEmail?emailid=@email.EmailID">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+

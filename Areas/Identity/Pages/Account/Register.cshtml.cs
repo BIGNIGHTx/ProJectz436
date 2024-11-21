@@ -112,7 +112,7 @@ namespace FinalProject.Areas.Identity.Pages.Account
 
             try
             {
-                string connectionString = "Server=tcp:finalxl.database.windows.net,1433;Initial Catalog=vidit;Persist Security Info=False;User ID=vidit;Password=thep1234@;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
+                string connectionString = "Server=tcp:vidit12345.database.windows.net,1433;Initial Catalog=Finalzz;Persist Security Info=False;User ID=vidit;Password=thep1234@;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
 
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {

@@ -1,21 +1,23 @@
+﻿﻿@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap');
+
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
     margin-bottom: 60px;
-    background-color: #DDDDDD;
+    background-color: white;
     color: white;
 }
 
@@ -26,3 +28,57 @@ th {
 td {
     color: Black;
 }
+
+}
+
+.button-container {
+    display: flex;
+    justify-content: space-between;
+    position: sticky;
+    bottom: 0; /* ปุ่มจะคงอยู่ที่ด้านล่างของ container */
+    z-index: 1;
+    background-color: #e0e0e0;
+    padding: 18px 0;
+    width: 100%;
+    gap: 10px;
+    margin-top: 10px;
+    max-height: calc(100vh - 80px);
+    padding-bottom: 10px;
+}
+
+    .button-container .btn {
+        width: 50%; /* หรือปรับตามความเหมาะสม */
+    }
+
+.form-label {
+    color: black;
+}
+
+.manrope-<uniquifier > {
+    font-family: "Manrope", serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+}
+
+body {
+    font-family: "Manrope", serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    /*font-family: 'Manrope', sans-serif;
+    color: #e0e0e0;*/ /* สามารถเปลี่ยนสีตัวหนังสือได้ตามต้องการ */
+    /*font-size: 16px;*/ /* ขนาดฟอนต์เริ่มต้น */
+    /*line-height: 1.5;*/ /* ความสูงบรรทัดเพื่อให้ข้อความอ่านง่ายขึ้น */
+}
+
+.scrollable-content {
+    overflow-y: scroll; /* Enables scrolling */
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+    padding: 10px;
+}
+
+    .scrollable-content::-webkit-scrollbar {
+        display: none; /* Safari and Chrome */
+    }

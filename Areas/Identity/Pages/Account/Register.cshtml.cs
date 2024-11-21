@@ -19,7 +19,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
-using FinalProject.Pages;
 using System.Security.Cryptography.Xml;
 using Microsoft.Data.SqlClient;
 
@@ -33,9 +32,7 @@ namespace FinalProject.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<FinalProjectUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
-        public UserInfo userInfo = new UserInfo();
-        public String errorMessage = "";
-        public String succesMessage = "";
+
         public RegisterModel(
             UserManager<FinalProjectUser> userManager,
             IUserStore<FinalProjectUser> userStore,
@@ -54,34 +51,47 @@ namespace FinalProject.Areas.Identity.Pages.Account
         [BindProperty]
         public InputModel Input { get; set; }
 
-        public String ReturnUrl { get; set; }
-
+        public string ReturnUrl { get; set; }
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
+        public string ErrorMessage { get; set; }
+        public string SuccessMessage { get; set; }
 
         public class InputModel
         {
             [Required]
-            [StringLength(255, ErrorMessage = "The First Name must be in between 1 to 255.", MinimumLength = 1)]
+            [StringLength(255, ErrorMessage = "The First Name must be between 1 and 255 characters.", MinimumLength = 1)]
             public string FirstName { get; set; }
 
             [Required]
-            [StringLength(255, ErrorMessage = "The Last Name must be in between 1 to 255.", MinimumLength = 1)]
+            [StringLength(255, ErrorMessage = "The Last Name must be between 1 and 255 characters.", MinimumLength = 1)]
             public string LastName { get; set; }
 
             [Required]
-            [StringLength(15, ErrorMessage = "The Mobile Phone must be in between 7 to 15.", MinimumLength = 7)]
+            [StringLength(15, ErrorMessage = "The Mobile Phone must be between 7 and 15 characters.", MinimumLength = 7)]
             public string MobilePhone { get; set; }
 
             [Required]
-            [StringLength(255, ErrorMessage = "The Username must be between 1 to 255.", MinimumLength = 1)]
+            [StringLength(255, ErrorMessage = "The Username must be between 1 and 255 characters.", MinimumLength = 1)]
             public string UserName { get; set; }
 
             [Required]
             [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
             [DataType(DataType.Password)]
             public string Password { get; set; }
-        }
 
+            [Required]
+            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+            [DataType(DataType.Password)]
+            [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+            public string ConfirmPassword { get; set; }
+
+            [Required]
+            public string Department { get; set; }
+
+            [Required]
+            [EmailAddress(ErrorMessage = "The Email field is not a valid e-mail address.")]
+            public string Email { get; set; }
+        }
 
         public async Task OnGetAsync(string returnUrl = null)
         {
@@ -89,57 +99,60 @@ namespace FinalProject.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
 
-        //public async Task<IActionResult> OnPostAsync(string returnUrl = null)
-        //{
-        //    returnUrl ??= Url.Content("~/");
-        //    ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-        //    if (ModelState.IsValid)
-        //    {
-        //        var user = CreateUser();
+        public async Task<IActionResult> OnPostAsync(string returnUrl = null)
+        {
+            returnUrl ??= Url.Content("~/");
+            ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
-        //        user.FirstName = Input.FirstName;
-        //        user.LastName = Input.LastName;
-        //        user.MobilePhone = Input.MobilePhone;
+            if (!ModelState.IsValid)
+            {
+                ErrorMessage = "Please correct the errors in the form.";
+                return Page();
+            }
 
-        //        await _userStore.SetUserNameAsync(user, Input.UserName, CancellationToken.None);
-        //        await _emailStore.SetEmailAsync(user, Input.UserName, CancellationToken.None);
-        //        var result = await _userManager.CreateAsync(user, Input.Password);
+            try
+            {
+                string connectionString = "Server=tcp:finalxl.database.windows.net,1433;Initial Catalog=vidit;Persist Security Info=False;User ID=vidit;Password=thep1234@;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
 
-        //        if (result.Succeeded)
-        //        {
-        //            _logger.LogInformation("User created a new account with password.");
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    await connection.OpenAsync();
+                    string sql = @"
+                        INSERT INTO userInfo 
+                        (FirstName, LastName, MobilePhone, Username, Password, Email, Department) 
+                        VALUES (@FirstName, @LastName, @MobilePhone, @Username, @Password, @Email, @Department);";
 
-        //            var userId = await _userManager.GetUserIdAsync(user);
-        //            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-        //            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-        //            var callbackUrl = Url.Page(
-        //                "/Account/ConfirmEmail",
-        //                pageHandler: null,
-        //                values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
-        //                protocol: Request.Scheme);
+                    using (SqlCommand command = new SqlCommand(sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@FirstName", Input.FirstName);
+                        command.Parameters.AddWithValue("@LastName", Input.LastName);
+                        command.Parameters.AddWithValue("@MobilePhone", Input.MobilePhone);
+                        command.Parameters.AddWithValue("@Username", Input.UserName);
+                        command.Parameters.AddWithValue("@Password", Input.Password); // Use hashing in production!
+                        command.Parameters.AddWithValue("@Email", Input.Email);
+                        command.Parameters.AddWithValue("@Department", Input.Department);
 
-        //            await _emailSender.SendEmailAsync(Input.UserName, "Confirm your email",
-        //                $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                        int rowsAffected = await command.ExecuteNonQueryAsync();
 
-        //            if (_userManager.Options.SignIn.RequireConfirmedAccount)
-        //            {
-        //                return RedirectToPage("RegisterConfirmation", new { email = Input.UserName, returnUrl = returnUrl });
-        //            }
-        //            else
-        //            {
-        //                await _signInManager.SignInAsync(user, isPersistent: false);
-        //                return LocalRedirect(returnUrl);
-        //            }
-        //        }
-        //        foreach (var error in result.Errors)
-        //        {
-        //            ModelState.AddModelError(string.Empty, error.Description);
-        //        }
-        //    }
-
-        //    // If we got this far, something failed, redisplay form
-        //    return Page();
-        //}
+                        if (rowsAffected > 0)
+                        {
+                            SuccessMessage = "Registration successful!";
+                            return RedirectToPage("/Account/Login");
+                        }
+                        else
+                        {
+                            ErrorMessage = "Failed to register the user. Please try again.";
+                            return Page();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = $"An error occurred: {ex.Message}";
+                return Page();
+            }
+        }
 
         private FinalProjectUser CreateUser()
         {
@@ -163,65 +176,5 @@ namespace FinalProject.Areas.Identity.Pages.Account
             }
             return (IUserEmailStore<FinalProjectUser>)_userStore;
         }
-
-        public void OnPost()
-        {
-            userInfo.FirstName = Request.Form["FirstName"];
-            userInfo.LastName = Request.Form["LastName"];
-            userInfo.MobilePhone = Request.Form["MobilePhone"];
-            userInfo.Username = Request.Form["Username"];
-            userInfo.Password = Request.Form["Password"];
-
-            if (userInfo.FirstName.Length == 0 || userInfo.LastName.Length == 0 ||
-                userInfo.MobilePhone.Length == 0 || userInfo.Username.Length == 0||
-                userInfo.Password.Length == 0)
-            {
-                errorMessage = "All the fields are required";
-                return;
-            }
-
-            try
-            {
-                String connectionString = "Server=tcp:finalx.database.windows.net,1433;Initial Catalog=Finalx;Persist Security Info=False;User ID=vidit;Password=thep1234@;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                    connection.Open();
-                    String sql = "INSERT INTO userInfo " +
-                                 "(FirstName, LastName, MobilePhone, Username, Password) VALUES " +
-                                 "(@FirstName,@LastName,@MobilePhone,@Username,@Password);";
-
-                    using (SqlCommand command = new SqlCommand(sql, connection))
-                    {
-                        command.Parameters.AddWithValue("@FirstName", userInfo.FirstName);
-                        command.Parameters.AddWithValue("@LastName", userInfo.LastName);
-                        command.Parameters.AddWithValue("@MobilePhone", userInfo.MobilePhone);
-                        command.Parameters.AddWithValue("@Username", userInfo.Username);
-                        command.Parameters.AddWithValue("@Password", userInfo.Password);
-
-                        command.ExecuteNonQuery();
-                    }
-
-                }
-            }
-            catch (Exception ex)
-            {
-                errorMessage = ex.Message;
-                return;
-            }
-
-            userInfo.FirstName = "";
-            userInfo.LastName = "";
-            userInfo.MobilePhone = "";
-            userInfo.Username = "";
-            userInfo.Password = "";
-
-            succesMessage = "New Item Added Correctly";
-
-            
-
-
-        }
-
-
     }
 }

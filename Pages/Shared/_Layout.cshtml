@@ -8,13 +8,12 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/FinalProject.styles.css" asp-append-version="true" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
-
 </head>
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-dark bg-light shadow-sm py-3">
             <div class="container">
-                <a class="navbar-brand fw-bold text-dark" >Samui Diwa</a>
+                <a class="navbar-brand fw-bold text-dark">Samui Diwa</a>
                 <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -22,44 +21,49 @@
                 <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
                     <ul class="nav">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" aria-current="page" href="#">
-                                <i class="bi bi-inbox-fill me-2" asp-area="" asp-page="/Index"></i> Inbox
+                            <a class="nav-link text-dark" aria-current="page" asp-area="" asp-page="/Index">
+                                <i class="bi bi-inbox-fill me-2"></i> Inbox
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" href="#">
-                                <i class="bi bi-envelope me-2" ></i> Compose Email
+                            <a class="nav-link text-dark" asp-area="" asp-page="/ComposeEmail">
+                                <i class="bi bi-envelope me-2"></i> Compose Email
                             </a>
                         </li>
                     </ul>
 
                     <!-- User Profile Dropdown -->
                     <div class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <div class="bg-dark rounded-circle d-flex align-items-center justify-content-center" style="width: 35px; height: 35px;">
-                                <span class="text-white fw-bold">U</span>
-                            </div>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end shadow-sm" aria-labelledby="userDropdown">
-                            <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Login">Login</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item text-danger" href="#">Log Out</a></li>
-                        </ul>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <div class="bg-dark rounded-circle d-flex align-items-center justify-content-center" style="width: 35px; height: 35px;">
+                                    <span class="text-white fw-bold">U</span>
+                                </div>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end shadow-sm" aria-labelledby="userDropdown">
+                                <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Logout">Logout</a></li>
+                            </ul>
+                        }
+                        else
+                        {
+                            <a class="nav-link" asp-area="Identity" asp-page="/Account/Login">Login</a>
+                        }
                     </div>
                 </div>
             </div>
         </nav>
-
     </header>
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

@@ -9,7 +9,7 @@
         <h3 class="text-center" style="color:black">@ViewData["Title"]</h3>
 
         <!-- Form Section -->
-        <form id="account" method="post"  class="scrollable-content mb-3" style="height: 350px; overflow-y: auto;">
+        <form id="account" method="post"  class="scrollable-content mb-3" style="height: 320px; overflow-y: auto;">
             <div asp-validation-summary="ModelOnly" class="text-danger text-center" role="alert"></div>
 
             <div class="mb-2">
@@ -70,7 +70,7 @@
         <!-- Static Buttons Section -->
         
             
-        <div class="button-container mt-3 d-flex justify-content-between">
+        <div class="button-container mt-3 d-flex justify-content-between" style="background-color: #CECECE">
             <a class="btn btn-dark" style="width:180px" asp-area="Identity" asp-page="/Account/Login">Back to Login</a>
 
             <button id="registerSubmit" class="btn btn-dark" style="width:180px" onclick="submitForm()">Register</button>

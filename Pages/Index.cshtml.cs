@@ -1,80 +1,77 @@
-﻿using FinalProject.Areas.Identity.Data;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Data.SqlClient;
-using Microsoft.AspNetCore.Identity;
 
 namespace FinalProject.Pages
 {
     public class IndexModel : PageModel
     {
-
         public List<EmailInfo> listEmails = new List<EmailInfo>();
-        public List<UserInfo> listuser = new List<UserInfo>();
-
-        private readonly ILogger<IndexModel> _logger;
-
-        public IndexModel(ILogger<IndexModel> logger)
-        {
-            _logger = logger;
-        }
 
         public void OnGet()
         {
             try
             {
-                String connectionString = "Server=tcp:buem.database.windows.net,1433;Initial Catalog=buem;Persist Security Info=False;User ID=[USERNAME];Password=[PASSWORD];MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
+                string connectionString = "Server=tcp:vidit12345.database.windows.net,1433;Initial Catalog=Finalzz;Persist Security Info=False;User ID=vidit;Password=thep1234@;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
+
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
+                    Console.WriteLine("Database connection successful!");
 
-                    string username = "";
-                    if (User.Identity.Name == null)
-                    {
-                        username = "";
-                    } else
-                    {
-                        username = User.Identity.Name;
-                    }
+                    string currentUserEmail = User.Identity?.Name ?? "guest@example.com";
+                    Console.WriteLine($"Current User Email: {currentUserEmail}");
 
-                    String sql = "SELECT * FROM emails WHERE emailreceiver='"+username+"'";
+                    string sql = @"
+                SELECT 
+                    EmailID, EmailSubject, EmailMessage, EmailDate, EmailIsRead, EmailSender, EmailReceiver
+                FROM emails
+                WHERE EmailReceiver = @EmailReceiver";
+
                     using (SqlCommand command = new SqlCommand(sql, connection))
                     {
+                        command.Parameters.AddWithValue("@EmailReceiver", currentUserEmail);
+
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
                             while (reader.Read())
                             {
-                                EmailInfo emailInfo = new EmailInfo();
-                                emailInfo.EmailID = "" + reader.GetInt32(0);
-                                emailInfo.EmailSubject = reader.GetString(1);
-                                emailInfo.EmailMessage = reader.GetString(2);
-                                emailInfo.EmailDate = reader.GetDateTime(3).ToString();
-                                emailInfo.EmailIsRead = "" + reader.GetInt32(4);
-                                emailInfo.EmailSender = reader.GetString(5);
-                                emailInfo.EmailReceiver = reader.GetString(6);
+                                Console.WriteLine("Email found!");
 
-                                listEmails.Add(emailInfo);
+                                EmailInfo email = new EmailInfo
+                                {
+                                    EmailID = reader["EmailID"].ToString(),
+                                    EmailSubject = reader["EmailSubject"].ToString(),
+                                    EmailMessage = reader["EmailMessage"].ToString(),
+                                    EmailDate = reader["EmailDate"].ToString(),
+                                    EmailIsRead = reader["EmailIsRead"].ToString(),
+                                    EmailSender = reader["EmailSender"].ToString(),
+                                    EmailReceiver = reader["EmailReceiver"].ToString()
+                                };
+
+                                listEmails.Add(email);
                             }
                         }
                     }
-                };
+                }
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                Console.WriteLine("Error: " + ex.Message);
             }
         }
-    }
-    public class EmailInfo
+
+
+        public class EmailInfo
     {
-        public String EmailID;
-        public String EmailSubject;
-        public String EmailMessage;
-        public String EmailDate;
-        public String EmailIsRead;
-        public String EmailSender;
-        public String EmailReceiver;
+        public string EmailID { get; set; }
+        public string EmailSubject { get; set; }
+        public string EmailMessage { get; set; }
+        public string EmailDate { get; set; }
+        public string EmailIsRead { get; set; }
+        public string EmailSender { get; set; }
+        public string EmailReceiver { get; set; }
     }
+}
 
     public class UserInfo
     {
